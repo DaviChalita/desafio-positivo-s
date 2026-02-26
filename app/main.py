@@ -4,10 +4,10 @@ from app.controllers.client_controller import router as client_router
 
 
 def create_app() -> FastAPI:
-    app = FastAPI()
-    app.include_router(client_router)
+    application = FastAPI()
+    application.include_router(client_router)
 
-    return app
+    return application
 
 
 app = create_app()

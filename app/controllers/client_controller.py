@@ -21,3 +21,7 @@ async def create_clients(client_dto: ClientDto, session: SessionClient):
 @router.get("/")
 async def get_all_clients(session: SessionClient):
     return GetClientService(session).get_all_clients()
+
+@router.get("/{client_id}")
+async def get_client_by_id(client_id: int, session: SessionClient):
+    return GetClientService(session).get_client_by_id(client_id)

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import select
+from sqlalchemy import select, Sequence
 from sqlalchemy.orm import Session
 
 from app.dtos.client_dto import ClientDto
@@ -16,5 +16,8 @@ class ClientRepository:
                                 created_at=datetime.now()))
         self.session.commit()
 
-    def get_all_clients(self):
+    def get_all_clients(self) -> Sequence[Client]:
         return self.session.scalars(select(Client)).all()
+
+    def get_client_by_id(self, client_id: int) -> Client:
+        return self.session.scalars(select(Client).where(Client.id == client_id)).first()
