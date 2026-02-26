@@ -3,6 +3,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+#Singleton para conectar ao bd
 Sessao = sessionmaker(
     autocommit=False,
     autoflush=False,

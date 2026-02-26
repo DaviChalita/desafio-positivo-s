@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.dtos.client_dto import ClientDto
@@ -14,3 +15,6 @@ class ClientRepository:
         self.session.add(Client(name=client_dto.name, email=client_dto.email, document=client_dto.document,
                                 created_at=datetime.now()))
         self.session.commit()
+
+    def get_all_clients(self):
+        return self.session.scalars(select(Client)).all()
