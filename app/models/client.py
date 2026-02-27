@@ -12,5 +12,6 @@ class Client(Base):
     name: Mapped[str] = mapped_column()
     email: Mapped[str] = mapped_column()
     document: Mapped[str] = mapped_column()
+    active: Mapped[bool] = mapped_column()
     created_at: Mapped[datetime] = mapped_column()
     updated_at: Mapped[datetime] = mapped_column()

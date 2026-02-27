@@ -23,3 +23,11 @@ class UpdateClientService:
         except Exception:
             logger.exception("Erro ao alterar cliente")
             raise HTTPException(status_code=500, detail="Erro ao tentar alterar o cliente")
+
+    def change_client_activation_status_by_id(self, client_id: int):
+        try:
+            self.repo.change_client_activation_status_by_id(client_id)
+            return {"msg":"Status de ativação do cliente alterado com sucesso"}
+        except Exception:
+            logger.exception("Erro ao alterar status de ativação do cliente")
+            raise HTTPException(status_code=500,detail="Erro ao tentar alterar o status de ativação do cliente")
