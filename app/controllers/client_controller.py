@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.database_conn.database_conn import get_session
 from app.dtos.client_dto import ClientDto
 from app.services.create_client_service import CreateClientService
+from app.services.delete_client_service import DeleteClientService
 from app.services.get_client_service import GetClientService
 from app.services.update_client_service import UpdateClientService
 
@@ -34,3 +35,7 @@ async def update_client_by_id(client_id: int, client_dto: ClientDto, session: Se
 @router.patch("/{client_id}")
 async def change_client_activation_status_by_id(client_id: int, session: SessionClient):
     return UpdateClientService(session).change_client_activation_status_by_id(client_id)
+
+@router.delete("/{client_id}")
+async def delete_client_by_id(client_id: int, session: SessionClient):
+    return DeleteClientService(session).delete_client_by_id(client_id)

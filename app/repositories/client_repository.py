@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import select, Sequence, update, not_
+from sqlalchemy import select, Sequence, update, not_, delete
 from sqlalchemy.orm import Session
 
 from app.dtos.client_dto import ClientDto
@@ -31,6 +31,10 @@ class ClientRepository:
 
     def change_client_activation_status_by_id(self, client_id: int):
         self.session.execute(
-            update(Client).where(Client.id == client_id).values(active= not_(Client.active), updated_at=datetime.now())
+            update(Client).where(Client.id == client_id).values(active=not_(Client.active), updated_at=datetime.now())
         )
+        self.session.commit()
+
+    def delete_client_by_id(self, client_id: int):
+        self.session.execute(delete(Client).where(Client.id == client_id))
         self.session.commit()
