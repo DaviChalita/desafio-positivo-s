@@ -30,3 +30,7 @@ async def get_client_by_id(client_id: int, session: SessionClient):
 @router.put("/{client_id}")
 async def update_client_by_id(client_id: int, client_dto: ClientDto, session: SessionClient):
     return UpdateClientService(session).update_client_by_id(client_id, client_dto)
+
+@router.patch("/{client_id}")
+async def change_client_activation_status_by_id(client_id: int, session: SessionClient):
+    return UpdateClientService(session).change_client_activation_status_by_id(client_id)
