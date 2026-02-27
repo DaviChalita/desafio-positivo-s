@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import select, Sequence
+from sqlalchemy import select, Sequence, update
 from sqlalchemy.orm import Session
 
 from app.dtos.client_dto import ClientDto
@@ -21,3 +21,9 @@ class ClientRepository:
 
     def get_client_by_id(self, client_id: int) -> Client:
         return self.session.scalars(select(Client).where(Client.id == client_id)).first()
+
+    def update_client_by_id(self, client_id: int, client_dto: ClientDto):
+        self.session.execute(
+            update(Client).where(Client.id == client_id).values(name=client_dto.name, email=client_dto.email,
+                                                                document=client_dto.document, updated_at=datetime.now()))
+        self.session.commit()
