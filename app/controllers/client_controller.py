@@ -14,7 +14,6 @@ SessionClient = Annotated[AsyncDatabase, Depends(get_session_mongo)]
 
 router = APIRouter(prefix="/clients")
 
-
 @router.post("/")
 async def create_clients(client_dto: ClientDto, session: SessionClient):
     return await CreateClientService(session).create_client(client_dto)
@@ -29,14 +28,15 @@ async def get_all_clients(session: SessionClient):
 async def get_client_by_id(client_id: str, session: SessionClient):
     return await GetClientService(session).get_client_by_id(client_id)
 
+
 @router.put("/{client_id}")
 async def update_client_by_id(client_id: str, client_dto: ClientDto, session: SessionClient):
     return await UpdateClientService(session).update_client_by_id(client_id, client_dto)
 
 
 @router.patch("/{client_id}")
-async def update_client_partially_by_id(client_id: str, session: SessionClient):
-    return await UpdateClientService(session).update_client_partially_by_id(client_id)
+async def change_client_activation_status_by_id(client_id: str, session: SessionClient):
+    return await UpdateClientService(session).change_client_activation_status_by_id(client_id)
 
 
 @router.delete("/{client_id}")

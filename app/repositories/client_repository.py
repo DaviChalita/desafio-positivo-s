@@ -29,7 +29,7 @@ class ClientRepository:
         client = await self.session.find_one({'_id': ObjectId(client_id)})
         return ClientResp.model_validate({**client, '_id': str(client['_id'])}).model_dump(by_alias=False)
 
-    async def update_client_by_id(self, client_id: str, client_dto: ClientDto, client: Client):
+    async def update_client_by_id(self, client_id: str, client_dto: ClientDto, client: ClientResp):
         await self.session.replace_one({'_id': ObjectId(client_id)},
                                        {**client_dto.model_dump(exclude_unset=True),
                                         'active': client['active'],

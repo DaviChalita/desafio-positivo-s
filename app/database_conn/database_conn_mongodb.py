@@ -1,6 +1,9 @@
+import logging
 import os
 
 from pymongo import AsyncMongoClient
+
+logger = logging.getLogger(__name__)
 
 MONGO_CONN_URL = (f"mongodb://{os.getenv('MONGO_USER')}:"
                   f"{os.getenv('MONGO_PASS')}"
