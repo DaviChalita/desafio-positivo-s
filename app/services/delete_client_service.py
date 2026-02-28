@@ -2,9 +2,9 @@ import logging
 
 from fastapi import HTTPException
 from pymongo.asynchronous.database import AsyncDatabase
-from sqlalchemy.orm import Session
 
 from app.repositories.client_repository import ClientRepository
+from app.services.get_client_service import GetClientService
 
 logger = logging.getLogger(__name__)
 
@@ -12,10 +12,10 @@ logger = logging.getLogger(__name__)
 class DeleteClientService:
     def __init__(self, db: AsyncDatabase):
         self.repo = ClientRepository(db)
+        self.get_client_service = GetClientService(db)
 
     async def delete_client_by_id(self, client_id: str):
-        if self.repo.get_client_by_id(client_id) is None:
-            raise HTTPException(status_code=404, detail="Erro ao tentar excluir o cliente")
+        await self.get_client_service.get_client_by_id(client_id)
 
         try:
             await self.repo.delete_client_by_id(client_id)
