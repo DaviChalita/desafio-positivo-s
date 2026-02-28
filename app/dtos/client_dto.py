@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, field_validator
 
-
+#tamanho de texto escolhido arbitrario, depende do que estiver no requisito, tambem pode ser adicionado um tamanho minimo
 def check_max_length(field: str, size: int):
     if len(field) > size:
         raise ValueError("Tamanho do campo é inválido")
