@@ -6,7 +6,7 @@ from pymongo.asynchronous.database import AsyncDatabase
 
 from app.dtos.client_dto import ClientDto
 from app.models.client import Client
-from app.models.client_resp import ClientResp
+from app.dtos.client_resp import ClientDtoResp
 
 
 class ClientRepository:
@@ -19,17 +19,17 @@ class ClientRepository:
                    created_at=datetime.now()))
 
     async def get_all_clients(self):
-        clients: list[ClientResp] = []
+        clients: list[ClientDtoResp] = []
         async for doc in self.session.find({}):
-            clients.append(ClientResp.model_validate({**doc, '_id': str(doc['_id'])}).model_dump(by_alias=False))
+            clients.append(ClientDtoResp.model_validate({**doc, '_id': str(doc['_id'])}).model_dump(by_alias=False))
 
         return clients
 
-    async def get_client_by_id(self, client_id: str) -> ClientResp:
+    async def get_client_by_id(self, client_id: str) -> ClientDtoResp:
         client = await self.session.find_one({'_id': ObjectId(client_id)})
-        return ClientResp.model_validate({**client, '_id': str(client['_id'])}).model_dump(by_alias=False)
+        return ClientDtoResp.model_validate({**client, '_id': str(client['_id'])}).model_dump(by_alias=False)
 
-    async def update_client_by_id(self, client_id: str, client_dto: ClientDto, client: ClientResp):
+    async def update_client_by_id(self, client_id: str, client_dto: ClientDto, client: ClientDtoResp):
         await self.session.replace_one({'_id': ObjectId(client_id)},
                                        {**client_dto.model_dump(exclude_unset=True),
                                         'active': client['active'],

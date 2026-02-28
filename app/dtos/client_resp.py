@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-class ClientResp(BaseModel):
+class ClientDtoResp(BaseModel):
     id: Optional[str] = Field(alias="_id")
     name: Optional[str] = None
     email: Optional[str] = None
