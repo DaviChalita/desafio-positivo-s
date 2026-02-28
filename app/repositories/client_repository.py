@@ -1,40 +1,46 @@
 from datetime import datetime
 
-from sqlalchemy import select, Sequence, update, not_, delete
-from sqlalchemy.orm import Session
+from bson import ObjectId
+from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.asynchronous.database import AsyncDatabase
 
 from app.dtos.client_dto import ClientDto
 from app.models.client import Client
+from app.models.client_resp import ClientResp
 
 
 class ClientRepository:
-    def __init__(self, session: Session):
-        self.session = session
+    def __init__(self, session: AsyncDatabase):
+        self.session: AsyncCollection = session['clients']
 
-    def create_client_repository(self, client_dto: ClientDto) -> None:
-        self.session.add(Client(name=client_dto.name, email=client_dto.email, document=client_dto.document, active=True,
-                                created_at=datetime.now()))
-        self.session.commit()
+    async def create_client_repository(self, client_dto: ClientDto) -> None:
+        await self.session.insert_one(
+            Client(name=client_dto.name, email=client_dto.email, document=client_dto.document, active=True,
+                   created_at=datetime.now()))
 
-    def get_all_clients(self) -> Sequence[Client]:
-        return self.session.scalars(select(Client)).all()
+    async def get_all_clients(self):
+        clients: list[ClientResp] = []
+        async for doc in self.session.find({}):
+            clients.append(ClientResp.model_validate({**doc, '_id': str(doc['_id'])}).model_dump(by_alias=False))
 
-    def get_client_by_id(self, client_id: int) -> Client:
-        return self.session.scalars(select(Client).where(Client.id == client_id)).first()
+        return clients
 
-    def update_client_by_id(self, client_id: int, client_dto: ClientDto):
-        self.session.execute(
-            update(Client).where(Client.id == client_id).values(name=client_dto.name, email=client_dto.email,
-                                                                document=client_dto.document,
-                                                                updated_at=datetime.now()))
-        self.session.commit()
+    async def get_client_by_id(self, client_id: str) -> ClientResp:
+        client = await self.session.find_one({'_id': ObjectId(client_id)})
+        return ClientResp.model_validate({**client, '_id': str(client['_id'])}).model_dump(by_alias=False)
 
-    def change_client_activation_status_by_id(self, client_id: int):
-        self.session.execute(
-            update(Client).where(Client.id == client_id).values(active=not_(Client.active), updated_at=datetime.now())
-        )
-        self.session.commit()
+    async def update_client_by_id(self, client_id: str, client_dto: ClientDto, client: Client):
+        await self.session.replace_one({'_id': ObjectId(client_id)},
+                                       {**client_dto.model_dump(exclude_unset=True),
+                                        'active': client['active'],
+                                        'created_at': client['created_at'],
+                                        'updated_at': datetime.now(), })
 
-    def delete_client_by_id(self, client_id: int):
-        self.session.execute(delete(Client).where(Client.id == client_id))
-        self.session.commit()
+    async def change_client_activation_status_by_id(self, client_id: str):
+        await self.session.update_one({'_id': ObjectId(client_id)},
+                                      [{'$set': {
+                                          'active': {'$not': ['$active']},
+                                          'updated_at': datetime.now()}}])
+
+    async def delete_client_by_id(self, client_id: str):
+        await self.session.delete_one({"_id": ObjectId(client_id)})

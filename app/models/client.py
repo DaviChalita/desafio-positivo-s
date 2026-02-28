@@ -1,17 +1,11 @@
 from datetime import datetime
-
-from sqlalchemy.orm import Mapped, mapped_column
-
-from app.models import Base
+from typing import TypedDict
 
 
-class Client(Base):
-    __tablename__ = "client"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
-    name: Mapped[str] = mapped_column()
-    email: Mapped[str] = mapped_column()
-    document: Mapped[str] = mapped_column()
-    active: Mapped[bool] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column()
-    updated_at: Mapped[datetime] = mapped_column()
+class Client(TypedDict):
+    name: str
+    email: str
+    document: str
+    active: bool
+    created_at: datetime
+    updated_at: datetime

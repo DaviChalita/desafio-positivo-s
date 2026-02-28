@@ -1,7 +1,9 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class ClientDto(BaseModel):
-    name: str
-    email: str
-    document: str
+    name: Optional[str] = None
+    email: Optional[str] = None
+    document: Optional[str] = None
