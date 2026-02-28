@@ -11,6 +11,7 @@ def check_max_length(field: str, size: int):
 
 class ClientDto(BaseModel):
     name: Optional[str] = None
+    #email pode ser validado através de um email para confirmar o email cadastrado, o regex de email é inválido em muitos casos
     email: Optional[str] = None
     document: Optional[str] = None
 
@@ -33,7 +34,7 @@ class ClientDto(BaseModel):
         if not document or document.strip() == "":
             return document
         check_max_length(document, 200)
-        #validacao para rg, outros podem ser adicionados tambem
+        #validacao para rg, outros podem ser adicionados tambem, como cpf, cnpj, etc
         if not re.fullmatch(r"^(\d{2}\.?\d{3}\.?\d{3}-?[\dXx]|\d{9,10})$", document):
             raise ValueError("Documento inválido")
         return document
