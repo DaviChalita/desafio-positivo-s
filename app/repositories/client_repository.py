@@ -42,5 +42,8 @@ class ClientRepository:
                                           'active': {'$not': ['$active']},
                                           'updated_at': datetime.now()}}])
 
+    #tambem poderia ser um update atualizando apenas o status para removido: True, seria a exclusao lógica que muitas vezes
+    #se apresenta como a mais desejada, principalmente a nível de histórico, usei a exclusao fisica para demonstrar
+    # utilização do delete_one
     async def delete_client_by_id(self, client_id: str):
         await self.session.delete_one({"_id": ObjectId(client_id)})
