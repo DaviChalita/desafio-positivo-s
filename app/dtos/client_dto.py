@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, field_validator
 
-#tamanho de texto escolhido arbitrario, depende do que estiver no requisito, tambem pode ser adicionado um tamanho minimo
+
 def check_max_length(field: str, size: int):
     if len(field) > size:
         raise ValueError("Tamanho do campo é inválido")
@@ -11,7 +11,7 @@ def check_max_length(field: str, size: int):
 
 class ClientDto(BaseModel):
     name: Optional[str] = None
-    #email pode ser validado através de um email para confirmar o email cadastrado, o regex de email é inválido em muitos casos
+    # email pode ser validado através de um email de confirmação de cadastro, o regex de email é inválido em muitos casos
     email: Optional[str] = None
     document: Optional[str] = None
 
@@ -33,8 +33,9 @@ class ClientDto(BaseModel):
     def validate_document(cls, document: str) -> str:
         if not document or document.strip() == "":
             return document
-        check_max_length(document, 200)
-        #validacao para rg, outros podem ser adicionados tambem, como cpf, cnpj, etc
-        if not re.fullmatch(r"^(\d{2}\.?\d{3}\.?\d{3}-?[\dXx]|\d{9,10})$", document):
+        # validacao sem máscara
+        if len(document) != 9:
+            raise ValueError("Tamanho do campo é inválido")
+        if not re.fullmatch(r"^\d{8}[0-9X]$", document):
             raise ValueError("Documento inválido")
         return document
