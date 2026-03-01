@@ -16,12 +16,12 @@ SessionClient = Annotated[AsyncDatabase, Depends(get_session_mongo)]
 router = APIRouter(prefix="/clients")
 
 
-@router.post("/", name="Criar Clientes")
+@router.post("", name="Criar Clientes")
 async def create_clients(client_dto: ClientCreateDto, session: SessionClient):
     return await CreateClientService(session).create_client(client_dto)
 
 
-@router.get("/", name="Buscar Todos Clientes")
+@router.get("", name="Buscar Todos Clientes")
 async def get_all_clients(session: SessionClient):
     return await GetClientService(session).get_all_clients()
 
