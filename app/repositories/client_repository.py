@@ -27,7 +27,7 @@ class ClientRepository:
 
     async def get_client_by_id(self, client_id: str) -> ClientDtoResp:
         client = await self.session.find_one({'_id': ObjectId(client_id)})
-        return ClientDtoResp.model_validate({**client, '_id': str(client['_id'])}).model_dump(by_alias=False)
+        return None if client is None else ClientDtoResp.model_validate({**client, '_id': str(client['_id'])}).model_dump(by_alias=False)
 
     async def update_client_by_id(self, client_id: str, client_dto: ClientDto, client: ClientDtoResp):
         await self.session.replace_one({'_id': ObjectId(client_id)},
