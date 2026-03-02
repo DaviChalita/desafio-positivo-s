@@ -1,4 +1,4 @@
-Como rodar: na raiz do projeto, rode: docker compose up 
+Como rodar: na raiz do projeto, rode **docker compose up**
 
 
 para acessar o Swagger: http://localhost:8000/docs#/
