@@ -8,7 +8,10 @@ MONGO_URL={ip da conexão localhost}:{porta de acesso ao banco}
 
 Caso rode fora do docker, é necessário usar o comando para instalar as dependências: pip install -r /caminho/para/requirements.txt
 
-Na raiz do projeto, rode **docker compose up**
+Na raiz do projeto, rode **docker compose up** 
+
+Caso queira rodar via Pycharm, no run configuration coloque: module -> uvicorn \
+e no script parameters -> app.main:app --reload
 
 Para acessar o Swagger: http://localhost:8000/docs#/
 
